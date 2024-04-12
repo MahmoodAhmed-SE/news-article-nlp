@@ -17,8 +17,9 @@ app.use(express.static('dist'))
 console.log(__dirname)
 
 //variable for url and api key
-const url = ''
-const apiKey = ''
+require('dotenv').config()
+const url = "https://api.meaningcloud.com/sentiment-2.1"
+const apiKey = process.env.API_KEY
 
 
 app.get('/', function (req, res) {
@@ -26,8 +27,40 @@ app.get('/', function (req, res) {
 })
 
 
-// POST Route
+const processArticle = async (text) => {
+    const formdata = new FormData();
 
+    formdata.append("key", apiKey);
+    formdata.append("txt", text);
+    formdata.append("lang", "en");  // 2-letter code, like en es fr ...
+
+    const requestOptions = {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow'
+    };
+
+    try {
+        const response = await fetch(url, requestOptions)
+        return response
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+// POST Route
+app.post('/post-article', async (req, res) => {
+    const text = req.body.text;
+
+
+    const res = await processArticle(text)
+
+    // if there is response
+    if (res) {
+        
+    }
+
+})
 
 
 // designates what port the app will listen to for incoming requests

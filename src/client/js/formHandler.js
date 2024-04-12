@@ -10,7 +10,7 @@ function handleSubmit(event) {
     const formText = document.getElementById('name').value;
     
     // Check if the URL is valid
- 
+    
         // If the URL is valid, send it to the server
       
     
