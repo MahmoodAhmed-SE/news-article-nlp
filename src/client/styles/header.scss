@@ -1,12 +1,17 @@
+$size: 30px;
+$boldness: bold;
+
 header {
     display: flex;
     justify-content: space-between;
     padding: 10px 40px;
 
     .nav {
-
+        font-size: $size;
+        font-weight: boldness;
     }
     .logo {
-        
+        font-size: $size;
+        font-weight: boldness;
     }
 }

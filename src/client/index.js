@@ -1,5 +1,5 @@
 // js files
-import { handleSubmit } from './js/formHandler'
+import { handleFormSubmission } from './js/formHandler'
 
 // scss/sass files 
 import './styles/resets.scss'

@@ -1,5 +1,4 @@
-const { checkForName } = require('./nameChecker')
-const { checkForUrl } = require('./urlChecker');
+const { URLValidity } = require('./URLValidity');
 
 
 // Form submission event listener
@@ -8,6 +7,24 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', handleFormSubmission)
 });
 
+/*
+    res ex:
+        agreement: "AGREEMENT"
+        confidence: "100"
+        irony: "NONIRONIC"
+        model: "general_en"
+        score_tag: "NONE"
+        sentence_list: (18) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+        sentimented_concept_list: []
+        sentimented_entity_list: (14) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+        status: {code: '0', msg: 'OK', credits: '1', remaining_credits: '51'}
+        subjectivity: "OBJECTIVE"
+
+
+    needed: polarity: (positive/'negative')
+            subjectivity: ('subjective', factual)
+            text: a text snippet from the article
+*/
 
 function handleFormSubmission(event) {
     event.preventDefault();
@@ -17,24 +34,33 @@ function handleFormSubmission(event) {
     
     /* 
         Check whether input URL is valid, and if it is, send it to server to get information,
-        otherwise, 
+        otherwise, alert user for an invalid url input
     */
-    if (checkForUrl(inputURL)) {
+    if (URLValidity(inputURL)) {
         postArticleURL('/article', { url: inputURL })
-        .then(response => {
-            console.log(response)
-            // Handle the response from the server and update dom
-            document.getElementById('results').innerHTML = response.score_tag;
+        .then(articleData => {
+            console.log(articleData)
+            // Handling the response from the server and updating the DOM
+            updateDOMWithResponse(articleData)
         })
         .catch(error => {
             console.error('Error:', error);
         });
     } 
     else {
-        alert('Invalid URL');
+        alert('Invalid URL! Please enter a valid URL.');
     }
 }
-
+const updateDOMWithResponse = (articleData) => {
+    document.getElementById('results').innerHTML = `
+    <h2>Article Information</h2>: 
+    <ul>
+    <li>Subjectivity: ${articleData.subjectivity}</li>
+    <li>Text: ${articleData.sentence_list.text}</li>
+    <li>Irony: ${articleData.irony}</li>
+    </ul>
+    `;
+}
 // Function to send article url to the server
 const postArticleURL = async (url = '', data = {}) => {
     try {
