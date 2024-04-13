@@ -1,19 +1,26 @@
-import {checkForName} from './nameChecker'
-import { checkForUrl } from './urlChecker';
+const { checkForName } = require('./nameChecker')
+const { checkForUrl } = require('./urlChecker');
 
-const form = document.getElementById('urlForm');
-form.addEventListener('submit', handleSubmit);
 
-function handleSubmit(event) {
+// Form submission event listener
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('urlForm');
+    form.addEventListener('submit', handleFormSubmission)
+});
+
+
+function handleFormSubmission(event) {
     event.preventDefault();
 
     // Get the URL from the input field
-    const formText = document.getElementById('name').value;
+    const inputURL = document.getElementById('url-entry').value;
     
-    // Check if the URL is valid
-    if (checkForUrl(formText)) {
-        // If the URL is valid, send it to the server
-        postData('/article', { url: formText })
+    /* 
+        Check whether input URL is valid, and if it is, send it to server to get information,
+        otherwise, 
+    */
+    if (checkForUrl(inputURL)) {
+        postArticleURL('/article', { url: inputURL })
         .then(response => {
             console.log(response)
             // Handle the response from the server and update dom
@@ -21,18 +28,15 @@ function handleSubmit(event) {
         })
         .catch(error => {
             console.error('Error:', error);
-            // Handle errors
         });
     } 
     else {
         alert('Invalid URL');
-        console.log('Invalid URL');
-        // Handle invalid URL 
     }
 }
 
 // Function to send article url to the server
-async function postData(url = '', data = {}) {
+const postArticleURL = async (url = '', data = {}) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -48,5 +52,4 @@ async function postData(url = '', data = {}) {
     }
 }
 
-module.exports = { handleSubmit };
-
+module.exports = { handleFormSubmission };
