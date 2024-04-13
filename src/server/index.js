@@ -18,7 +18,7 @@ console.log(__dirname)
 
 //variable for url and api key
 require('dotenv').config()
-const url = "https://api.meaningcloud.com/sentiment-2.1"
+const baseURL = "https://api.meaningcloud.com/sentiment-2.1?"
 const apiKey = process.env.API_KEY
 
 
@@ -27,45 +27,21 @@ app.get('/', function (req, res) {
 })
 
 
-const processArticle = async (text) => {
-    const formdata = new FormData();
-
-    formdata.append("key", apiKey);
-    formdata.append("txt", text);
-    formdata.append("lang", "en");  // 2-letter code, like en es fr ...
-
-    const requestOptions = {
-        method: 'POST',
-        body: formdata,
-        redirect: 'follow'
-    };
-
-    try {
-        const response = await fetch(url, requestOptions)
-        return response
-    } catch (error) {
-        console.log('error', error)
-    }
-}
 
 // POST Route
-app.post('/post-article', async (req, res) => {
-    const text = req.body.text;
+app.post('/article', async (req, res) => {
+    const articleUrl = req.body.url
+    
+    const apiURL = `${baseURL}key=${apiKey}&url=${articleUrl}&lang=en`
 
+    try {
+        const cloudapiResponse = await fetch(apiURL)
+        const articleInfo = await cloudapiResponse.json()
 
-    const res = await processArticle(text)
-
-    // if there is response
-    if (res) {
-        
+        res.status(200).json(articleInfo)
     }
-
+    catch (error) {
+        console.error("CloudApi Error", error)
+        res.status(500).json("unavailable article info")
+    }
 })
-
-
-// designates what port the app will listen to for incoming requests
-app.listen(8080, function () {
-    console.log('Example app listening on port 8080!')
-})
-
-
