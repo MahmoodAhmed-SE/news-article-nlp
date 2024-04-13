@@ -48,5 +48,5 @@ async function postData(url = '', data = {}) {
     }
 }
 
-export { handleSubmit };
+module.exports = { handleSubmit };
 
