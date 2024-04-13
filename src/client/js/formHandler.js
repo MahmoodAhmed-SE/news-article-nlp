@@ -7,24 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', handleFormSubmission)
 });
 
-/*
-    res ex:
-        agreement: "AGREEMENT"
-        confidence: "100"
-        irony: "NONIRONIC"
-        model: "general_en"
-        score_tag: "NONE"
-        sentence_list: (18) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-        sentimented_concept_list: []
-        sentimented_entity_list: (14) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-        status: {code: '0', msg: 'OK', credits: '1', remaining_credits: '51'}
-        subjectivity: "OBJECTIVE"
-
-
-    needed: polarity: (positive/'negative')
-            subjectivity: ('subjective', factual)
-            text: a text snippet from the article
-*/
 
 function handleFormSubmission(event) {
     event.preventDefault();
