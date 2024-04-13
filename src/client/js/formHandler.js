@@ -15,6 +15,7 @@ function handleSubmit(event) {
         // If the URL is valid, send it to the server
         postData('/article', { url: formText })
         .then(response => {
+            console.log(response)
             // Handle the response from the server and update dom
             document.getElementById('results').innerHTML = response.score_tag;
         })
